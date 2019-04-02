@@ -14,6 +14,8 @@
 		46AFA4A4225289B50087CC55 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 46AFA4A3225289B50087CC55 /* Assets.xcassets */; };
 		46AFA4A7225289B50087CC55 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 46AFA4A5225289B50087CC55 /* LaunchScreen.storyboard */; };
 		46AFA4B2225289B50087CC55 /* OMDBClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4B1225289B50087CC55 /* OMDBClientTests.swift */; };
+		46AFA4BD2253CC1B0087CC55 /* MediaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4BC2253CC1B0087CC55 /* MediaCell.swift */; };
+		46AFA4BF2253D3CA0087CC55 /* OMDBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4BE2253D3CA0087CC55 /* OMDBModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +40,8 @@
 		46AFA4AD225289B50087CC55 /* OMDBClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OMDBClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		46AFA4B1225289B50087CC55 /* OMDBClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OMDBClientTests.swift; sourceTree = "<group>"; };
 		46AFA4B3225289B50087CC55 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		46AFA4BC2253CC1B0087CC55 /* MediaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaCell.swift; sourceTree = "<group>"; };
+		46AFA4BE2253D3CA0087CC55 /* OMDBModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OMDBModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +90,8 @@
 				46AFA4A5225289B50087CC55 /* LaunchScreen.storyboard */,
 				46AFA4A8225289B50087CC55 /* Info.plist */,
 				46AFA4A0225289B30087CC55 /* OMDBClient.xcdatamodeld */,
+				46AFA4BC2253CC1B0087CC55 /* MediaCell.swift */,
+				46AFA4BE2253D3CA0087CC55 /* OMDBModel.swift */,
 			);
 			path = OMDBClient;
 			sourceTree = "<group>";
@@ -200,8 +206,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46AFA4BF2253D3CA0087CC55 /* OMDBModel.swift in Sources */,
 				46AFA4A2225289B30087CC55 /* OMDBClient.xcdatamodeld in Sources */,
 				46AFA49C225289B20087CC55 /* ViewController.swift in Sources */,
+				46AFA4BD2253CC1B0087CC55 /* MediaCell.swift in Sources */,
 				46AFA49A225289B20087CC55 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
