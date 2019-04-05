@@ -13,6 +13,8 @@ class ViewController: UIViewController {
     @IBOutlet var collectionView: UICollectionView!
     
     private var content: OMDBModel?
+    private var pageNumber = 1
+    private var isFetching = false
     let defaultSession = URLSession(configuration: .default)
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,12 +34,19 @@ class ViewController: UIViewController {
         layout.itemSize = CGSize(width: size, height: size)
     }
     
+    private func incrementalFetch(){
+        if self.content!.search.count < Int(self.content!.totalResults)! {
+            fetchData()
+        }
+    }
     
     private func fetchData() {
-        
-        let path = "http://www.omdbapi.com/?s=Batman&page=7&apikey=eeefc96f"
+      
+        let path = "http://www.omdbapi.com/?s=Batman&page=\(pageNumber)&apikey=eeefc96f"
         let url  = URL(string: path)!
+        isFetching = true
         defaultSession.dataTask(with: url) { data, response, error in
+            self.isFetching = false
             guard let response = response as? HTTPURLResponse,response.statusCode == 200 else{
                 print("Status code: invalid")
                 return
@@ -64,8 +73,29 @@ class ViewController: UIViewController {
                     return
                 }
                 DispatchQueue.main.async {
-                    self.content = decodedResponse
-                    self.collectionView.reloadData()
+                  
+                    if let content = self.content {
+                        self.pageNumber = self.pageNumber + 1
+                        let startIndex = self.content!.search.count
+                        self.content?.search.append(contentsOf: decodedResponse.search)
+                        let endIndex = self.content!.search.count - 1
+                        
+                        //  self.collectionView.reloadData()
+                        var paths = [IndexPath]()
+                        for i in startIndex...endIndex {
+                            paths.append(IndexPath(item: i, section: 0))
+                        }
+                        self.collectionView.performBatchUpdates({
+                            self.collectionView.reloadItems(at: paths)
+                        }, completion: nil)
+                        
+
+                    }
+                    else {
+                         self.pageNumber = self.pageNumber + 1
+                        self.content = decodedResponse
+                         self.collectionView.reloadData()
+                    }
                 }
                 
             }
@@ -85,24 +115,31 @@ class ViewController: UIViewController {
 
 extension ViewController: UICollectionViewDataSource,UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return content?.search.count ?? 0
+        return Int(content?.totalResults ?? "0") ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MediaCell", for: indexPath) as! MediaCell
-        let item = content!.search[indexPath.row]
-        cell.mediaTypeImageView.image = UIImage(named: item.type.rawValue)
-        cell.releaseDateLabel.text = item.year
-        cell.titleLabel.text = item.title
-      
+        if indexPath.row < content!.search.count {
+            let item = content!.search[indexPath.row]
+            cell.mediaTypeImageView.image = UIImage(named: item.type.rawValue)
+            cell.releaseDateLabel.text = item.year
+            cell.titleLabel.text = item.title
+            cell.backgroundColor = .white
             downloadImage(path: item.poster, handler: { img in
-                  cell.posterImageView.image = UIImage(data: img)
+                cell.posterImageView.image = UIImage(data: img)
                 
             })
-      //  cell.backgroundView?.backgroundColor = .black
-      //  cell.backgroundColor = .black
-        
+            //  cell.backgroundView?.backgroundColor = .black
+            //  cell.backgroundColor = .black
+            
+            
+        }
+        else {
+                cell.backgroundColor = .black
+        }
+      
         return cell
     }
     
@@ -117,7 +154,8 @@ extension ViewController: UICollectionViewDataSource,UICollectionViewDelegate {
                 }
             }
             catch {
-                
+                print("URL:\(url)")
+                print("ERROR: \(error)")
             }
          
             
@@ -129,5 +167,24 @@ extension ViewController: UICollectionViewDataSource,UICollectionViewDelegate {
 }
 
 
-
+extension ViewController: UICollectionViewDataSourcePrefetching {
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        print(indexPaths)
+        let arrayIndexs = content!.search.enumerated().map { offset, element in return IndexPath(row: offset, section: 0)}
+        let contentSet = Set(arrayIndexs)
+        for indexPath in indexPaths {
+            if contentSet.contains(indexPath) && !isFetching {
+                incrementalFetch()
+            }
+        }
+//        let prefetchSet = Set(indexPaths)
+//        let intersection = prefetchSet.intersection(contentSet)
+//
+//        if intersection.count < prefetchSet.count && !isFetching {
+//            fetchData()
+//        }
+    }
+    
+    
+}
 

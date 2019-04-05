@@ -9,7 +9,7 @@
 import Foundation
 
 struct OMDBModel: Codable {
-    let search: [Search]
+    var search: [Search]
     let totalResults, response: String
     
     enum CodingKeys: String, CodingKey {
