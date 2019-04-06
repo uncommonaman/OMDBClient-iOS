@@ -29,12 +29,13 @@ class ViewController: UIViewController {
         
     }
     
-    private func setupCellSizing() {
+    private func setupCellSizing()  {
         let layout = collectionView.collectionViewLayout as!  UICollectionViewFlowLayout
-        let width = self.view.frame.width
+        let width = self.view.frame.width - (self.view.safeAreaInsets.left * 2)
         let coloumns:CGFloat = 2
         let size = (width - 10 - 20) / coloumns
         layout.itemSize = CGSize(width: size, height: size)
+ 
     }
     
     private func fetchNextPage(){
@@ -42,6 +43,17 @@ class ViewController: UIViewController {
         currentPage += 1
         fetchMovies()
     }
+    
+
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        setupCellSizing()
+    
+    }
+    
+    
+
     
     private func fetchMovies() {
         
