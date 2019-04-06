@@ -16,6 +16,8 @@
 		46AFA4B2225289B50087CC55 /* OMDBClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4B1225289B50087CC55 /* OMDBClientTests.swift */; };
 		46AFA4BD2253CC1B0087CC55 /* MediaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4BC2253CC1B0087CC55 /* MediaCell.swift */; };
 		46AFA4BF2253D3CA0087CC55 /* OMDBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4BE2253D3CA0087CC55 /* OMDBModel.swift */; };
+		46AFA4C1225752110087CC55 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4C0225752110087CC55 /* ImageDownloader.swift */; };
+		46AFA4C3225782660087CC55 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4C2225782660087CC55 /* ImageManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +44,8 @@
 		46AFA4B3225289B50087CC55 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		46AFA4BC2253CC1B0087CC55 /* MediaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaCell.swift; sourceTree = "<group>"; };
 		46AFA4BE2253D3CA0087CC55 /* OMDBModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OMDBModel.swift; sourceTree = "<group>"; };
+		46AFA4C0225752110087CC55 /* ImageDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
+		46AFA4C2225782660087CC55 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +96,8 @@
 				46AFA4A0225289B30087CC55 /* OMDBClient.xcdatamodeld */,
 				46AFA4BC2253CC1B0087CC55 /* MediaCell.swift */,
 				46AFA4BE2253D3CA0087CC55 /* OMDBModel.swift */,
+				46AFA4C0225752110087CC55 /* ImageDownloader.swift */,
+				46AFA4C2225782660087CC55 /* ImageManager.swift */,
 			);
 			path = OMDBClient;
 			sourceTree = "<group>";
@@ -208,8 +214,10 @@
 			files = (
 				46AFA4BF2253D3CA0087CC55 /* OMDBModel.swift in Sources */,
 				46AFA4A2225289B30087CC55 /* OMDBClient.xcdatamodeld in Sources */,
+				46AFA4C3225782660087CC55 /* ImageManager.swift in Sources */,
 				46AFA49C225289B20087CC55 /* ViewController.swift in Sources */,
 				46AFA4BD2253CC1B0087CC55 /* MediaCell.swift in Sources */,
+				46AFA4C1225752110087CC55 /* ImageDownloader.swift in Sources */,
 				46AFA49A225289B20087CC55 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -373,6 +381,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = S2ESBB47H5;
 				INFOPLIST_FILE = OMDBClient/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

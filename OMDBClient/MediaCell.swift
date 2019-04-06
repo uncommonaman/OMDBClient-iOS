@@ -15,7 +15,7 @@ class MediaCell: UICollectionViewCell {
     @IBOutlet var releaseDateLabel: UILabel!
     
     override func prepareForReuse() {
-        posterImageView.image = nil
+       posterImageView.image = nil
         mediaTypeImageView.image = nil
         titleLabel.text = nil
         releaseDateLabel.text = nil

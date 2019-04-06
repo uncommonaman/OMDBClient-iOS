@@ -9,21 +9,24 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     @IBOutlet var collectionView: UICollectionView!
     
     private var content: OMDBModel?
-    private var pageNumber = 1
-    private var isFetching = false
+    private var currentPage = 1
+    private var isFetchingNextPage = false
+    
     let defaultSession = URLSession(configuration: .default)
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "Batman"
-       navigationController?.navigationBar.prefersLargeTitles = true
-       setupCellSizing()
-        fetchData()
+        navigationController?.navigationBar.prefersLargeTitles = true
+        setupCellSizing()
+        fetchMovies()
         
-       
+        
     }
     
     private func setupCellSizing() {
@@ -34,19 +37,19 @@ class ViewController: UIViewController {
         layout.itemSize = CGSize(width: size, height: size)
     }
     
-    private func incrementalFetch(){
-        if self.content!.search.count < Int(self.content!.totalResults)! {
-            fetchData()
-        }
+    private func fetchNextPage(){
+        guard !isFetchingNextPage else { return }
+        currentPage += 1
+        fetchMovies()
     }
     
-    private func fetchData() {
-      
-        let path = "http://www.omdbapi.com/?s=Batman&page=\(pageNumber)&apikey=eeefc96f"
+    private func fetchMovies() {
+        
+        let path = "http://www.omdbapi.com/?s=Batman&page=\(currentPage)&apikey=eeefc96f"
         let url  = URL(string: path)!
-        isFetching = true
+        isFetchingNextPage = true
         defaultSession.dataTask(with: url) { data, response, error in
-            self.isFetching = false
+            
             guard let response = response as? HTTPURLResponse,response.statusCode == 200 else{
                 print("Status code: invalid")
                 return
@@ -73,42 +76,44 @@ class ViewController: UIViewController {
                     return
                 }
                 DispatchQueue.main.async {
-                  
+                    //
                     if let content = self.content {
-                        self.pageNumber = self.pageNumber + 1
+                        
                         let startIndex = self.content!.search.count
                         self.content?.search.append(contentsOf: decodedResponse.search)
                         let endIndex = self.content!.search.count - 1
                         
-                        //  self.collectionView.reloadData()
-                        var paths = [IndexPath]()
-                        for i in startIndex...endIndex {
-                            paths.append(IndexPath(item: i, section: 0))
+                        
+                        
+                        let newIndexPaths = (startIndex...endIndex).map { i in
+                            return IndexPath(row: i, section: 0)
                         }
+                        let visibleIndexPaths = Set(self.collectionView.indexPathsForVisibleItems)
+                        let indexPathsNeedingReload = Set(newIndexPaths).intersection(visibleIndexPaths)
                         self.collectionView.performBatchUpdates({
-                            self.collectionView.reloadItems(at: paths)
+                            self.collectionView.reloadItems(at: Array(indexPathsNeedingReload))
                         }, completion: nil)
                         
-
+                        
                     }
                     else {
-                         self.pageNumber = self.pageNumber + 1
                         self.content = decodedResponse
-                         self.collectionView.reloadData()
+                        self.collectionView.reloadData()
                     }
+                    self.isFetchingNextPage = false
                 }
                 
             }
             catch {
                 print("Parsing error")
             }
-           
             
             
-        }.resume()
+            
+            }.resume()
     }
-
-
+    
+    
 }
 
 
@@ -124,44 +129,36 @@ extension ViewController: UICollectionViewDataSource,UICollectionViewDelegate {
         if indexPath.row < content!.search.count {
             let item = content!.search[indexPath.row]
             cell.mediaTypeImageView.image = UIImage(named: item.type.rawValue)
-            cell.releaseDateLabel.text = item.year
+            cell.releaseDateLabel.text = "\(item.year) Page: \(currentPage) Index: \(indexPath.row)"
             cell.titleLabel.text = item.title
-            cell.backgroundColor = .white
-            downloadImage(path: item.poster, handler: { img in
-                cell.posterImageView.image = UIImage(data: img)
+            //  cell.backgroundColor = .white
+            
+            //  updateImageForCell(cell, collectionView: collectionView, item: item, indexPath: indexPath)
+            let downloadManager = ImageDownloadManager()
+            downloadManager.downloadImage(item: item, indexPath: indexPath) {img in
+                print("Handler called for index: \(indexPath.row)")
+                print(cell.titleLabel.text)
                 
-            })
-            //  cell.backgroundView?.backgroundColor = .black
-            //  cell.backgroundColor = .black
+                
+                if let cellToUpdate = collectionView.cellForItem(at: indexPath) as? MediaCell {
+                    cellToUpdate.posterImageView.image = img
+                    
+                }
+                
+                if let img = ImageDownloadManager.cache.object(forKey: item.poster as NSString) {
+                    cell.posterImageView.image = img
+                }
+                
+            }
             
             
         }
         else {
-                cell.backgroundColor = .black
-        }
-      
-        return cell
-    }
-    
-    
-    private func downloadImage(path:String,handler: @escaping (_ image:Data) -> Void) {
-        DispatchQueue.global().async {
-            let url = URL(string: path)
-            do {
-                let data = try Data(contentsOf: url!)
-                DispatchQueue.main.async {
-                    handler(data)
-                }
-            }
-            catch {
-                print("URL:\(url)")
-                print("ERROR: \(error)")
-            }
-         
             
         }
+        
+        return cell
     }
-    
     
     
 }
@@ -170,21 +167,24 @@ extension ViewController: UICollectionViewDataSource,UICollectionViewDelegate {
 extension ViewController: UICollectionViewDataSourcePrefetching {
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         print(indexPaths)
-        let arrayIndexs = content!.search.enumerated().map { offset, element in return IndexPath(row: offset, section: 0)}
-        let contentSet = Set(arrayIndexs)
-        for indexPath in indexPaths {
-            if contentSet.contains(indexPath) && !isFetching {
-                incrementalFetch()
-            }
+        
+        let needsFetch = indexPaths.contains { $0.row >= self.content!.search.count }
+        if needsFetch {
+            fetchNextPage()
         }
-//        let prefetchSet = Set(indexPaths)
-//        let intersection = prefetchSet.intersection(contentSet)
-//
-//        if intersection.count < prefetchSet.count && !isFetching {
-//            fetchData()
-//        }
     }
     
     
+    func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+        print("Cancel prfetching at: \(indexPaths)")
+    }
+    
+    
+    
+    
+    
 }
+
+
+
 

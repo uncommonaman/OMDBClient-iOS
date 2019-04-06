@@ -17,6 +17,10 @@ struct OMDBModel: Codable {
         case totalResults
         case response = "Response"
     }
+    var totalCount: Int{
+        return Int(totalResults) ?? 0
+    }
+    
 }
 
 struct Search: Codable {
@@ -30,6 +34,10 @@ struct Search: Codable {
         case imdbID
         case type = "Type"
         case poster = "Poster"
+    }
+    
+    var posterURL:URL? {
+        return URL(string: poster)
     }
 }
 
