@@ -41,8 +41,57 @@ struct Result: Codable {
     }
     
     var formattedDate: String {
-        return self.year
+        let split = year.split(separator: "–")
+        return calculateYearDifference(releasedYear: split)
     }
+    
+
+    
+    private func calculateYearDifference(releasedYear: [String.SubSequence]) -> String {
+        let currentDate = Date()
+        let dateFormatter = DateFormatter()
+        let calendar = Calendar.current
+        dateFormatter.dateFormat = "MM/dd/yyyy"
+        print(releasedYear)
+     let yearDiff = releasedYear.map { subStringYear -> String in
+            let stringYear = String(subStringYear)
+            let releaseDate = dateFormatter.date(from: "01/01/\(stringYear)")
+            let components = calendar.dateComponents([.year], from: releaseDate!, to: currentDate)
+            let year = components.year!.description
+            return year
+        }
+        
+        let suffix = dateSuffix(string: yearDiff)
+        let isCurrentYear = yearDiff.allSatisfy { $0 == "0"}
+        let formattedDate = yearDiff.joined(separator: "-") + " " + suffix
+        
+        if isCurrentYear {
+             return "This year"
+        }
+        else {
+            return formattedDate
+        }
+       
+ 
+        
+    }
+    
+    private func dateSuffix(string:[String]) -> String {
+        let intArray = string.compactMap{ Int($0)}
+        let ma = max(intArray.first!, intArray.last!)
+        switch ma {
+        case 0:
+            return "year ago"
+        case 1:
+            return "year ago"
+        default:
+            return "years ago"
+        }
+        
+        
+    }
+    
+  
 }
 
 enum TypeEnum: String, Codable {

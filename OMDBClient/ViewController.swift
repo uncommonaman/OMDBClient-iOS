@@ -129,7 +129,8 @@ extension ViewController: UICollectionViewDataSource,UICollectionViewDelegate {
         if indexPath.row < content!.results.count {
             let item = content!.results[indexPath.row]
             cell.mediaTypeImageView.image = UIImage(named: item.type.rawValue)
-            cell.releaseDateLabel.text = "\(item.year) Page: \(currentPage) Index: \(indexPath.row)"
+//            cell.releaseDateLabel.text = "\(item.year) Page: \(currentPage) Index: \(indexPath.row)"
+            cell.releaseDateLabel.text = item.formattedDate 
             cell.titleLabel.text = item.title
             //  cell.backgroundColor = .white
             
