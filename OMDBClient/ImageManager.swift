@@ -24,7 +24,7 @@ final class ImageDownloadManager {
     
     private var completionHandler:ImageDownloadHandler?
     
-    func downloadImage(item:Search, indexPath:IndexPath, handler: @escaping ImageDownloadHandler) {
+    func downloadImage(item:Result, indexPath:IndexPath, handler: @escaping ImageDownloadHandler) {
         self.completionHandler = handler
         
         if let cachedImage = ImageDownloadManager.cache.object(forKey: item.poster as NSString) {

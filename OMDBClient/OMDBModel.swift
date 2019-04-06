@@ -9,11 +9,11 @@
 import Foundation
 
 struct OMDBModel: Codable {
-    var search: [Search]
+    var results: [Result]
     let totalResults, response: String
     
     enum CodingKeys: String, CodingKey {
-        case search = "Search"
+        case results = "Search"
         case totalResults
         case response = "Response"
     }
@@ -23,7 +23,7 @@ struct OMDBModel: Codable {
     
 }
 
-struct Search: Codable {
+struct Result: Codable {
     let title, year, imdbID: String
     let type: TypeEnum
     let poster: String
@@ -38,6 +38,10 @@ struct Search: Codable {
     
     var posterURL:URL? {
         return URL(string: poster)
+    }
+    
+    var formattedDate: String {
+        return self.year
     }
 }
 

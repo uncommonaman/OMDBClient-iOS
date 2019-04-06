@@ -18,6 +18,7 @@
 		46AFA4BF2253D3CA0087CC55 /* OMDBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4BE2253D3CA0087CC55 /* OMDBModel.swift */; };
 		46AFA4C1225752110087CC55 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4C0225752110087CC55 /* ImageDownloader.swift */; };
 		46AFA4C3225782660087CC55 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4C2225782660087CC55 /* ImageManager.swift */; };
+		46AFA4C52258B4B90087CC55 /* OMDBModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4C42258B4B90087CC55 /* OMDBModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,7 @@
 		46AFA4BE2253D3CA0087CC55 /* OMDBModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OMDBModel.swift; sourceTree = "<group>"; };
 		46AFA4C0225752110087CC55 /* ImageDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
 		46AFA4C2225782660087CC55 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
+		46AFA4C42258B4B90087CC55 /* OMDBModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OMDBModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 			children = (
 				46AFA4B1225289B50087CC55 /* OMDBClientTests.swift */,
 				46AFA4B3225289B50087CC55 /* Info.plist */,
+				46AFA4C42258B4B90087CC55 /* OMDBModelTests.swift */,
 			);
 			path = OMDBClientTests;
 			sourceTree = "<group>";
@@ -227,6 +230,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				46AFA4B2225289B50087CC55 /* OMDBClientTests.swift in Sources */,
+				46AFA4C52258B4B90087CC55 /* OMDBModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

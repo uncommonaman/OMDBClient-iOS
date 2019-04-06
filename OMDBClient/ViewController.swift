@@ -71,7 +71,7 @@ class ViewController: UIViewController {
                     print("Invalid response")
                     return
                 }
-                guard decodedResponse.search.count > 0 else {
+                guard decodedResponse.results.count > 0 else {
                     print("No data found")
                     return
                 }
@@ -79,9 +79,9 @@ class ViewController: UIViewController {
                     //
                     if let content = self.content {
                         
-                        let startIndex = self.content!.search.count
-                        self.content?.search.append(contentsOf: decodedResponse.search)
-                        let endIndex = self.content!.search.count - 1
+                        let startIndex = self.content!.results.count
+                        self.content?.results.append(contentsOf: decodedResponse.results)
+                        let endIndex = self.content!.results.count - 1
                         
                         
                         
@@ -126,8 +126,8 @@ extension ViewController: UICollectionViewDataSource,UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MediaCell", for: indexPath) as! MediaCell
-        if indexPath.row < content!.search.count {
-            let item = content!.search[indexPath.row]
+        if indexPath.row < content!.results.count {
+            let item = content!.results[indexPath.row]
             cell.mediaTypeImageView.image = UIImage(named: item.type.rawValue)
             cell.releaseDateLabel.text = "\(item.year) Page: \(currentPage) Index: \(indexPath.row)"
             cell.titleLabel.text = item.title
@@ -168,7 +168,7 @@ extension ViewController: UICollectionViewDataSourcePrefetching {
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         print(indexPaths)
         
-        let needsFetch = indexPaths.contains { $0.row >= self.content!.search.count }
+        let needsFetch = indexPaths.contains { $0.row >= self.content!.results.count }
         if needsFetch {
             fetchNextPage()
         }

@@ -10,10 +10,10 @@ import Foundation
 import UIKit
 class ImageDownloader: Operation {
     
-    let photoRecord: Search
+    let photoRecord: Result
     var image: UIImage
     
-    init(photoRecord: Search) {
+    init(photoRecord: Result) {
         self.photoRecord = photoRecord
         self.image = UIImage(named: "failed")!
     }
