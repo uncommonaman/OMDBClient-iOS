@@ -11,12 +11,12 @@ import UIKit
 
 typealias ImageDownloadHandler = (_ image:UIImage) -> Void
 final class ImageDownloadManager {
-    private static var pendingOperations:[IndexPath:ImageDownloader] = [:]
+     private static var pendingOperations:[IndexPath:ImageDownloader] = [:]
      static var cache =  NSCache<NSString,UIImage>()
     lazy var queue: OperationQueue = {
         let q = OperationQueue()
         q.name = "imageDownloaderQueue"
-        // q.maxConcurrentOperationCount = 1
+     //    q.maxConcurrentOperationCount = 1
         return q
     }()
     
@@ -36,27 +36,42 @@ final class ImageDownloadManager {
             else {
                 if let pendingOperation = ImageDownloadManager.pendingOperations[indexPath] {
                     print("Operation is already pending for URL: \(item.poster) and row: \(indexPath.row)")
+                 
                     return
                 } else {
                     print("Creating a new task to download the image")
                     let operation = ImageDownloader(photoRecord: item)
+                   
                     operation.completionBlock = {
+                       
                         ImageDownloadManager.pendingOperations.removeValue(forKey: indexPath)
                         if operation.isCancelled {
                             return
                         }
                         ImageDownloadManager.cache.setObject(operation.image, forKey: item.poster as NSString)
+                        if operation.isCancelled {
+                            return
+                        }
                         DispatchQueue.main.async {
                             self.completionHandler?(operation.image)
                         }
                     }
-                    ImageDownloadManager.pendingOperations[indexPath] = operation
+                   
                     queue.addOperation(operation)
+                      ImageDownloadManager.pendingOperations[indexPath] = operation
                     
                 }
             }
             
         }
+    
+  static func  cancelOperation(indexPath:IndexPath)  {
+        if let pendingOperation = ImageDownloadManager.pendingOperations[indexPath] {
+            pendingOperation.cancel()
+            print("Did cancel pending operation at: \(indexPath)")
+            ImageDownloadManager.pendingOperations.removeValue(forKey: indexPath)
+        }
+    }
         
         
 }

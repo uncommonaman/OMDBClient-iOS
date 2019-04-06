@@ -52,9 +52,6 @@ class ViewController: UIViewController {
     
     }
     
-    
-
-    
     private func fetchMovies() {
         
         let path = "http://www.omdbapi.com/?s=Batman&page=\(currentPage)&apikey=eeefc96f"
@@ -142,35 +139,59 @@ extension ViewController: UICollectionViewDataSource,UICollectionViewDelegate {
             let item = content!.results[indexPath.row]
             cell.mediaTypeImageView.image = UIImage(named: item.type.rawValue)
 //            cell.releaseDateLabel.text = "\(item.year) Page: \(currentPage) Index: \(indexPath.row)"
-            cell.releaseDateLabel.text = item.formattedDate 
+//            cell.releaseDateLabel.text = item.formattedDate
+             cell.releaseDateLabel.text = "Page: \(currentPage) Index: \(indexPath.row)"
             cell.titleLabel.text = item.title
-            //  cell.backgroundColor = .white
-            
-            //  updateImageForCell(cell, collectionView: collectionView, item: item, indexPath: indexPath)
-            let downloadManager = ImageDownloadManager()
-            downloadManager.downloadImage(item: item, indexPath: indexPath) {img in
-                print("Handler called for index: \(indexPath.row)")
-                print(cell.titleLabel.text)
-                
-                
-                if let cellToUpdate = collectionView.cellForItem(at: indexPath) as? MediaCell {
-                    cellToUpdate.posterImageView.image = img
-                    
-                }
-                
-                if let img = ImageDownloadManager.cache.object(forKey: item.poster as NSString) {
-                    cell.posterImageView.image = img
-                }
-                
+        
+            if let img = ImageDownloadManager.cache.object(forKey: item.poster as NSString) {
+                print("Found cached for index: \(indexPath.row) Title: \(cell.titleLabel.text)")
+                cell.posterImageView.image = img
             }
             
-            
+            else {
+                  let downloadManager = ImageDownloadManager()
+                downloadManager.downloadImage(item: item, indexPath: indexPath) {img in
+                    print("Handler called for index: \(indexPath.row) Title: \(cell.titleLabel.text))")
+                   
+
+                    
+                    if collectionView.indexPath(for: cell)?.row == indexPath.row {
+                        print("✅ Row matched for index: \(indexPath.row) Title: \(cell.titleLabel.text))")
+                        cell.posterImageView.image = img
+                    }
+                    else {
+                        if let updatedCell = collectionView.cellForItem(at: indexPath) as? MediaCell {
+                            updatedCell.posterImageView.image = img
+                        }
+                          print("❌ index: \(indexPath.row) collection index: \(collectionView.indexPath(for: cell)?.row)")
+                    }
+                }
+
+            }
+
         }
         else {
             
         }
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+      ImageDownloadManager.cancelOperation(indexPath: indexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if let mediaCell = cell as? MediaCell {
+             if indexPath.row < content!.results.count {
+             let item = content!.results[indexPath.row]
+            if let img = ImageDownloadManager.cache.object(forKey: item.poster as NSString) {
+                
+              //  print("Found cached for index: \(indexPath.row) Title: \(cell.titleLabel.text)")
+                mediaCell.posterImageView.image = img
+            }
+        }
+        }
     }
     
     
@@ -189,7 +210,13 @@ extension ViewController: UICollectionViewDataSourcePrefetching {
     
     
     func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
-        print("Cancel prfetching at: \(indexPaths)")
+       // print("Cancel prfetching at: \(indexPaths)")
+        for indexPath in indexPaths {
+         //    print("Will cancel pending operation at: \(indexPath)")
+            ImageDownloadManager.cancelOperation(indexPath: indexPath)
+         
+        }
+        
     }
     
     
