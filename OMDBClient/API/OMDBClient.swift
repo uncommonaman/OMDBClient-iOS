@@ -56,13 +56,14 @@ class OMDBClient {
     private let searchKeyWord = "Batman"
     private let apiKey = "eeefc96f"
     private let basePath = "http://www.omdbapi.com"
+    lazy var path = "\(basePath)/?s=\(searchKeyWord)&page=\(currentPage)&apikey=\(apiKey)"
     private var isFetchingNextPage = false
     var currentPage = 1
     var content: [Result]?
     var total = 0
     weak var delegate: PaginationDelegate?
     
-    init(session:URLSession,delegate:PaginationDelegate) {
+    init(session:URLSession,delegate:PaginationDelegate?) {
         self.session = session
         self.delegate = delegate
     }
@@ -72,10 +73,10 @@ class OMDBClient {
     typealias ApiCompletionBlock<T: Decodable> = (ApiResult<T>) -> Void
     func fetchSearchResults(completion: @escaping ApiCompletionBlock<[Result]>) {
         
-        let path = "\(basePath)/?s=\(searchKeyWord)&page=\(currentPage)&apikey=\(apiKey)"
+        
         
         guard let url = URL(string: path) else {
-            completion(ApiResult.failure(ApiError.invalidURL(string: "Invalid URL :\(path)")))
+            completion(ApiResult.failure(ApiError.invalidURL(string: "Invalid URL")))
             return
         }
         isFetchingNextPage = true

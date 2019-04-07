@@ -20,6 +20,8 @@
 		46AFA4C3225782660087CC55 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4C2225782660087CC55 /* ImageManager.swift */; };
 		46AFA4C52258B4B90087CC55 /* OMDBModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4C42258B4B90087CC55 /* OMDBModelTests.swift */; };
 		46C058722259FE2E00D0C130 /* OMDBClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C058712259FE2E00D0C130 /* OMDBClient.swift */; };
+		46C05874225A30DC00D0C130 /* URLProtocolMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C05873225A30DC00D0C130 /* URLProtocolMock.swift */; };
+		46C05876225A4EBC00D0C130 /* stubbedResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 46C05875225A4EBC00D0C130 /* stubbedResponse.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +52,8 @@
 		46AFA4C2225782660087CC55 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		46AFA4C42258B4B90087CC55 /* OMDBModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OMDBModelTests.swift; sourceTree = "<group>"; };
 		46C058712259FE2E00D0C130 /* OMDBClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OMDBClient.swift; sourceTree = "<group>"; };
+		46C05873225A30DC00D0C130 /* URLProtocolMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLProtocolMock.swift; sourceTree = "<group>"; };
+		46C05875225A4EBC00D0C130 /* stubbedResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = stubbedResponse.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,7 +124,9 @@
 		46C058702259FE1C00D0C130 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				46C05875225A4EBC00D0C130 /* stubbedResponse.json */,
 				46C058712259FE2E00D0C130 /* OMDBClient.swift */,
+				46C05873225A30DC00D0C130 /* URLProtocolMock.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -206,6 +212,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46C05876225A4EBC00D0C130 /* stubbedResponse.json in Resources */,
 				46AFA4A7225289B50087CC55 /* LaunchScreen.storyboard in Resources */,
 				46AFA4A4225289B50087CC55 /* Assets.xcassets in Resources */,
 				46AFA49F225289B30087CC55 /* Main.storyboard in Resources */,
@@ -227,6 +234,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				46AFA4BF2253D3CA0087CC55 /* OMDBModel.swift in Sources */,
+				46C05874225A30DC00D0C130 /* URLProtocolMock.swift in Sources */,
 				46AFA4A2225289B30087CC55 /* OMDBClient.xcdatamodeld in Sources */,
 				46AFA4C3225782660087CC55 /* ImageManager.swift in Sources */,
 				46AFA49C225289B20087CC55 /* ViewController.swift in Sources */,
