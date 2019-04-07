@@ -19,6 +19,7 @@
 		46AFA4C1225752110087CC55 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4C0225752110087CC55 /* ImageDownloader.swift */; };
 		46AFA4C3225782660087CC55 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4C2225782660087CC55 /* ImageManager.swift */; };
 		46AFA4C52258B4B90087CC55 /* OMDBModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4C42258B4B90087CC55 /* OMDBModelTests.swift */; };
+		46C058722259FE2E00D0C130 /* OMDBClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C058712259FE2E00D0C130 /* OMDBClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		46AFA4C0225752110087CC55 /* ImageDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
 		46AFA4C2225782660087CC55 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		46AFA4C42258B4B90087CC55 /* OMDBModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OMDBModelTests.swift; sourceTree = "<group>"; };
+		46C058712259FE2E00D0C130 /* OMDBClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OMDBClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 		46AFA498225289B20087CC55 /* OMDBClient */ = {
 			isa = PBXGroup;
 			children = (
+				46C058702259FE1C00D0C130 /* API */,
 				46AFA499225289B20087CC55 /* AppDelegate.swift */,
 				46AFA49B225289B20087CC55 /* ViewController.swift */,
 				46AFA49D225289B30087CC55 /* Main.storyboard */,
@@ -112,6 +115,14 @@
 				46AFA4C42258B4B90087CC55 /* OMDBModelTests.swift */,
 			);
 			path = OMDBClientTests;
+			sourceTree = "<group>";
+		};
+		46C058702259FE1C00D0C130 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				46C058712259FE2E00D0C130 /* OMDBClient.swift */,
+			);
+			path = API;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -219,6 +230,7 @@
 				46AFA4A2225289B30087CC55 /* OMDBClient.xcdatamodeld in Sources */,
 				46AFA4C3225782660087CC55 /* ImageManager.swift in Sources */,
 				46AFA49C225289B20087CC55 /* ViewController.swift in Sources */,
+				46C058722259FE2E00D0C130 /* OMDBClient.swift in Sources */,
 				46AFA4BD2253CC1B0087CC55 /* MediaCell.swift in Sources */,
 				46AFA4C1225752110087CC55 /* ImageDownloader.swift in Sources */,
 				46AFA49A225289B20087CC55 /* AppDelegate.swift in Sources */,

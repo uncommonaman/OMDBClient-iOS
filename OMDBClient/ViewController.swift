@@ -11,12 +11,8 @@ import UIKit
 class ViewController: UIViewController {
     
     @IBOutlet var collectionView: UICollectionView!
-    
-    private var content: OMDBModel?
-    private var currentPage = 1
-    private var isFetchingNextPage = false
-    
     let defaultSession = URLSession(configuration: .default)
+    var apiClient: OMDBClient!
     
     
     override func viewDidLoad() {
@@ -24,9 +20,22 @@ class ViewController: UIViewController {
         self.navigationItem.title = "Batman"
         navigationController?.navigationBar.prefersLargeTitles = true
         setupCellSizing()
-        fetchMovies()
         
-        
+        apiClient = OMDBClient(session: defaultSession, delegate: self)
+        fetchData()
+    }
+    
+    func fetchData()  {
+        apiClient.fetchSearchResults(completion: { result in
+            switch result {
+            case .success(_):
+                self.collectionView.reloadData()
+            case .failure(let error):
+                let alert = UIAlertController(title: "Error", message: error.debugDescription, preferredStyle: .alert)
+                self.present(alert, animated: true, completion: nil)
+                
+            }
+        })
     }
     
     private func setupCellSizing()  {
@@ -35,93 +44,14 @@ class ViewController: UIViewController {
         let coloumns:CGFloat = 2
         let size = (width - 10 - 20) / coloumns
         layout.itemSize = CGSize(width: size, height: size)
- 
+        
     }
-    
-    private func fetchNextPage(){
-        guard !isFetchingNextPage else { return }
-        currentPage += 1
-        fetchMovies()
-    }
-    
-
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         setupCellSizing()
-    
-    }
-    
-    private func fetchMovies() {
         
-        let path = "http://www.omdbapi.com/?s=Batman&page=\(currentPage)&apikey=eeefc96f"
-        let url  = URL(string: path)!
-        isFetchingNextPage = true
-        defaultSession.dataTask(with: url) { data, response, error in
-            
-            guard let response = response as? HTTPURLResponse,response.statusCode == 200 else{
-                print("Status code: invalid")
-                return
-            }
-            
-            if let error = error {
-                print(error.localizedDescription)
-                return
-            }
-            
-            guard let data = data else {
-                print("Invalid data")
-                return
-            }
-            
-            do{
-                let decodedResponse = try JSONDecoder().decode(OMDBModel.self, from: data)
-                guard decodedResponse.response == "True" else {
-                    print("Invalid response")
-                    return
-                }
-                guard decodedResponse.results.count > 0 else {
-                    print("No data found")
-                    return
-                }
-                DispatchQueue.main.async {
-                    //
-                    if let content = self.content {
-                        
-                        let startIndex = self.content!.results.count
-                        self.content?.results.append(contentsOf: decodedResponse.results)
-                        let endIndex = self.content!.results.count - 1
-                        
-                        
-                        
-                        let newIndexPaths = (startIndex...endIndex).map { i in
-                            return IndexPath(row: i, section: 0)
-                        }
-                        let visibleIndexPaths = Set(self.collectionView.indexPathsForVisibleItems)
-                        let indexPathsNeedingReload = Set(newIndexPaths).intersection(visibleIndexPaths)
-                        self.collectionView.performBatchUpdates({
-                            self.collectionView.reloadItems(at: Array(indexPathsNeedingReload))
-                        }, completion: nil)
-                        
-                        
-                    }
-                    else {
-                        self.content = decodedResponse
-                        self.collectionView.reloadData()
-                    }
-                    self.isFetchingNextPage = false
-                }
-                
-            }
-            catch {
-                print("Parsing error")
-            }
-            
-            
-            
-            }.resume()
     }
-    
     
 }
 
@@ -129,31 +59,34 @@ class ViewController: UIViewController {
 
 extension ViewController: UICollectionViewDataSource,UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Int(content?.totalResults ?? "0") ?? 0
+        return apiClient.total
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MediaCell", for: indexPath) as! MediaCell
-        if indexPath.row < content!.results.count {
-            let item = content!.results[indexPath.row]
-            cell.mediaTypeImageView.image = UIImage(named: item.type.rawValue)
-//            cell.releaseDateLabel.text = "\(item.year) Page: \(currentPage) Index: \(indexPath.row)"
-//            cell.releaseDateLabel.text = item.formattedDate
-             cell.releaseDateLabel.text = "Page: \(currentPage) Index: \(indexPath.row)"
-            cell.titleLabel.text = item.title
         
+        if indexPath.row < apiClient.content!.count {
+            
+            let item = apiClient.content![indexPath.row]
+            
+            cell.mediaTypeImageView.image = UIImage(named: item.type.rawValue)
+            //            cell.releaseDateLabel.text = "\(item.year) Page: \(currentPage) Index: \(indexPath.row)"
+            //            cell.releaseDateLabel.text = item.formattedDate
+            cell.releaseDateLabel.text = "Page: \(apiClient.currentPage) Index: \(indexPath.row)"
+            cell.titleLabel.text = item.title
+            
             if let img = ImageDownloadManager.cache.object(forKey: item.poster as NSString) {
                 print("Found cached for index: \(indexPath.row) Title: \(cell.titleLabel.text)")
                 cell.posterImageView.image = img
             }
-            
+                
             else {
-                  let downloadManager = ImageDownloadManager()
+                let downloadManager = ImageDownloadManager()
                 downloadManager.downloadImage(item: item, indexPath: indexPath) {img in
                     print("Handler called for index: \(indexPath.row) Title: \(cell.titleLabel.text))")
-                   
-
+                    
+                    
                     
                     if collectionView.indexPath(for: cell)?.row == indexPath.row {
                         print("✅ Row matched for index: \(indexPath.row) Title: \(cell.titleLabel.text))")
@@ -163,12 +96,12 @@ extension ViewController: UICollectionViewDataSource,UICollectionViewDelegate {
                         if let updatedCell = collectionView.cellForItem(at: indexPath) as? MediaCell {
                             updatedCell.posterImageView.image = img
                         }
-                          print("❌ index: \(indexPath.row) collection index: \(collectionView.indexPath(for: cell)?.row)")
+                        print("❌ index: \(indexPath.row) collection index: \(collectionView.indexPath(for: cell)?.row)")
                     }
                 }
-
+                
             }
-
+            
         }
         else {
             
@@ -178,19 +111,20 @@ extension ViewController: UICollectionViewDataSource,UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-      ImageDownloadManager.cancelOperation(indexPath: indexPath)
+        ImageDownloadManager.cancelOperation(indexPath: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let mediaCell = cell as? MediaCell {
-             if indexPath.row < content!.results.count {
-             let item = content!.results[indexPath.row]
-            if let img = ImageDownloadManager.cache.object(forKey: item.poster as NSString) {
+            if indexPath.row < apiClient.content!.count {
+                let item = apiClient.content![indexPath.row]
                 
-              //  print("Found cached for index: \(indexPath.row) Title: \(cell.titleLabel.text)")
-                mediaCell.posterImageView.image = img
+                if let img = ImageDownloadManager.cache.object(forKey: item.poster as NSString) {
+                    
+                    //  print("Found cached for index: \(indexPath.row) Title: \(cell.titleLabel.text)")
+                    mediaCell.posterImageView.image = img
+                }
             }
-        }
         }
     }
     
@@ -201,30 +135,39 @@ extension ViewController: UICollectionViewDataSource,UICollectionViewDelegate {
 extension ViewController: UICollectionViewDataSourcePrefetching {
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         print(indexPaths)
-        
-        let needsFetch = indexPaths.contains { $0.row >= self.content!.results.count }
+        guard let result = apiClient.content?.count else { return }
+        let needsFetch = indexPaths.contains { $0.row >= result}
         if needsFetch {
-            fetchNextPage()
+            apiClient.fetchNextPage()
         }
     }
     
     
     func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
-       // print("Cancel prfetching at: \(indexPaths)")
-        for indexPath in indexPaths {
-         //    print("Will cancel pending operation at: \(indexPath)")
-            ImageDownloadManager.cancelOperation(indexPath: indexPath)
-         
-        }
+        // print("Cancel prfetching at: \(indexPaths)")
+        //        for indexPath in indexPaths {
+        //         //    print("Will cancel pending operation at: \(indexPath)")
+        //            ImageDownloadManager.cancelOperation(indexPath: indexPath)
+        //
+        //        }
         
     }
-    
-    
-    
-    
     
 }
 
 
-
-
+extension ViewController: PaginationDelegate {
+    func didAddPage(indexPaths: [IndexPath]) {
+        let visibleIndexPaths = Set(self.collectionView.indexPathsForVisibleItems)
+        let indexPathsNeedingReload = Set(indexPaths).intersection(visibleIndexPaths)
+        self.collectionView.performBatchUpdates({
+            self.collectionView.reloadItems(at: Array(indexPathsNeedingReload))
+        }, completion: nil)
+    }
+    
+    func didFailFetchingNextPage(error: ApiError, pageNumber: Int) {
+        let alert = UIAlertController(title: "Error", message: error.debugDescription, preferredStyle: .alert)
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+}

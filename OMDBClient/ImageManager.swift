@@ -36,12 +36,13 @@ final class ImageDownloadManager {
             else {
                 if let pendingOperation = ImageDownloadManager.pendingOperations[indexPath] {
                     print("Operation is already pending for URL: \(item.poster) and row: \(indexPath.row)")
+                    pendingOperation.queuePriority = .high
                  
                     return
                 } else {
                     print("Creating a new task to download the image")
                     let operation = ImageDownloader(photoRecord: item)
-                   
+                   operation.queuePriority = .veryHigh
                     operation.completionBlock = {
                        
                         ImageDownloadManager.pendingOperations.removeValue(forKey: indexPath)
@@ -56,9 +57,9 @@ final class ImageDownloadManager {
                             self.completionHandler?(operation.image)
                         }
                     }
-                   
+                    ImageDownloadManager.pendingOperations[indexPath] = operation
                     queue.addOperation(operation)
-                      ImageDownloadManager.pendingOperations[indexPath] = operation
+                    
                     
                 }
             }
@@ -67,9 +68,10 @@ final class ImageDownloadManager {
     
   static func  cancelOperation(indexPath:IndexPath)  {
         if let pendingOperation = ImageDownloadManager.pendingOperations[indexPath] {
-            pendingOperation.cancel()
+            //pendingOperation.cancel()
+            pendingOperation.queuePriority = .low
             print("Did cancel pending operation at: \(indexPath)")
-            ImageDownloadManager.pendingOperations.removeValue(forKey: indexPath)
+           // ImageDownloadManager.pendingOperations.removeValue(forKey: indexPath)
         }
     }
         
