@@ -41,7 +41,7 @@ struct Result: Codable {
     }
     
     var formattedDate: String {
-        let split = year.split(separator: "-")
+        let split = year.split(separator: "–")
         return calculateYearDifference(releasedYear: split)
     }
     

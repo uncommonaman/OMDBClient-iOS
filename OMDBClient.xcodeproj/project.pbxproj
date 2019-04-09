@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4618CA71225A82A300F67D81 /* SynchronizedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4618CA70225A82A300F67D81 /* SynchronizedDictionary.swift */; };
+		4618CA76225A969C00F67D81 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4618CA75225A969C00F67D81 /* DetailViewController.swift */; };
+		4618CA78225AA67600F67D81 /* Animator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4618CA77225AA67600F67D81 /* Animator.swift */; };
 		46AFA49A225289B20087CC55 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA499225289B20087CC55 /* AppDelegate.swift */; };
-		46AFA49C225289B20087CC55 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA49B225289B20087CC55 /* ViewController.swift */; };
+		46AFA49C225289B20087CC55 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA49B225289B20087CC55 /* MasterViewController.swift */; };
 		46AFA49F225289B30087CC55 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 46AFA49D225289B30087CC55 /* Main.storyboard */; };
 		46AFA4A2225289B30087CC55 /* OMDBClient.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 46AFA4A0225289B30087CC55 /* OMDBClient.xcdatamodeld */; };
 		46AFA4A4225289B50087CC55 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 46AFA4A3225289B50087CC55 /* Assets.xcassets */; };
@@ -35,9 +38,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4618CA70225A82A300F67D81 /* SynchronizedDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynchronizedDictionary.swift; sourceTree = "<group>"; };
+		4618CA75225A969C00F67D81 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		4618CA77225AA67600F67D81 /* Animator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animator.swift; sourceTree = "<group>"; };
 		46AFA496225289B20087CC55 /* OMDBClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OMDBClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		46AFA499225289B20087CC55 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		46AFA49B225289B20087CC55 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		46AFA49B225289B20087CC55 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
 		46AFA49E225289B30087CC55 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		46AFA4A1225289B30087CC55 /* OMDBClient.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OMDBClient.xcdatamodel; sourceTree = "<group>"; };
 		46AFA4A3225289B50087CC55 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -74,6 +80,50 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4618CA6F225A828F00F67D81 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				4618CA70225A82A300F67D81 /* SynchronizedDictionary.swift */,
+				4618CA77225AA67600F67D81 /* Animator.swift */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
+		4618CA72225A95A300F67D81 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				46AFA49B225289B20087CC55 /* MasterViewController.swift */,
+				4618CA75225A969C00F67D81 /* DetailViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		466A1D61225D476000218F40 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				46AFA4BC2253CC1B0087CC55 /* MediaCell.swift */,
+				46AFA49D225289B30087CC55 /* Main.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		466A1D62225D477F00218F40 /* ResponseModel */ = {
+			isa = PBXGroup;
+			children = (
+				46AFA4BE2253D3CA0087CC55 /* OMDBModel.swift */,
+			);
+			path = ResponseModel;
+			sourceTree = "<group>";
+		};
+		466A1D63225D479700218F40 /* ImageManager */ = {
+			isa = PBXGroup;
+			children = (
+				46AFA4C0225752110087CC55 /* ImageDownloader.swift */,
+				46AFA4C2225782660087CC55 /* ImageManager.swift */,
+			);
+			path = ImageManager;
+			sourceTree = "<group>";
+		};
 		46AFA48D225289B20087CC55 = {
 			isa = PBXGroup;
 			children = (
@@ -95,18 +145,15 @@
 		46AFA498225289B20087CC55 /* OMDBClient */ = {
 			isa = PBXGroup;
 			children = (
+				466A1D61225D476000218F40 /* View */,
+				4618CA72225A95A300F67D81 /* ViewControllers */,
+				4618CA6F225A828F00F67D81 /* Utility */,
 				46C058702259FE1C00D0C130 /* API */,
 				46AFA499225289B20087CC55 /* AppDelegate.swift */,
-				46AFA49B225289B20087CC55 /* ViewController.swift */,
-				46AFA49D225289B30087CC55 /* Main.storyboard */,
 				46AFA4A3225289B50087CC55 /* Assets.xcassets */,
 				46AFA4A5225289B50087CC55 /* LaunchScreen.storyboard */,
 				46AFA4A8225289B50087CC55 /* Info.plist */,
 				46AFA4A0225289B30087CC55 /* OMDBClient.xcdatamodeld */,
-				46AFA4BC2253CC1B0087CC55 /* MediaCell.swift */,
-				46AFA4BE2253D3CA0087CC55 /* OMDBModel.swift */,
-				46AFA4C0225752110087CC55 /* ImageDownloader.swift */,
-				46AFA4C2225782660087CC55 /* ImageManager.swift */,
 			);
 			path = OMDBClient;
 			sourceTree = "<group>";
@@ -124,6 +171,8 @@
 		46C058702259FE1C00D0C130 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				466A1D63225D479700218F40 /* ImageManager */,
+				466A1D62225D477F00218F40 /* ResponseModel */,
 				46C05875225A4EBC00D0C130 /* stubbedResponse.json */,
 				46C058712259FE2E00D0C130 /* OMDBClient.swift */,
 				46C05873225A30DC00D0C130 /* URLProtocolMock.swift */,
@@ -235,12 +284,15 @@
 			files = (
 				46AFA4BF2253D3CA0087CC55 /* OMDBModel.swift in Sources */,
 				46C05874225A30DC00D0C130 /* URLProtocolMock.swift in Sources */,
+				4618CA76225A969C00F67D81 /* DetailViewController.swift in Sources */,
 				46AFA4A2225289B30087CC55 /* OMDBClient.xcdatamodeld in Sources */,
 				46AFA4C3225782660087CC55 /* ImageManager.swift in Sources */,
-				46AFA49C225289B20087CC55 /* ViewController.swift in Sources */,
+				46AFA49C225289B20087CC55 /* MasterViewController.swift in Sources */,
+				4618CA78225AA67600F67D81 /* Animator.swift in Sources */,
 				46C058722259FE2E00D0C130 /* OMDBClient.swift in Sources */,
 				46AFA4BD2253CC1B0087CC55 /* MediaCell.swift in Sources */,
 				46AFA4C1225752110087CC55 /* ImageDownloader.swift in Sources */,
+				4618CA71225A82A300F67D81 /* SynchronizedDictionary.swift in Sources */,
 				46AFA49A225289B20087CC55 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

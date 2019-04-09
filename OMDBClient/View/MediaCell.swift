@@ -13,13 +13,18 @@ class MediaCell: UICollectionViewCell {
     @IBOutlet var mediaTypeImageView: UIImageView!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var releaseDateLabel: UILabel!
+    @IBOutlet var activityIndicatorView: UIActivityIndicatorView!
     
     override func prepareForReuse() {
        posterImageView.image = nil
+        activityIndicatorView.stopAnimating()
+      //  activityIndicatorView.isHidden = true
         mediaTypeImageView.image = nil
         titleLabel.text = nil
         releaseDateLabel.text = nil
     }
+    
+    
     
 }
 

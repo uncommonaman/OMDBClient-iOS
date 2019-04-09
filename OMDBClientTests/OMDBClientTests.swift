@@ -29,7 +29,7 @@ class OMDBClientTests: XCTestCase {
     
     
     func testAPIClient_InvalidURL() {
-        apiClient.path = ""
+        apiClient.basePath = "%"
         let exp = expectation(description: "Invalid url")
         apiClient.fetchSearchResults { result in
             exp.fulfill()

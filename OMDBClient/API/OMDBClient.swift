@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 
 protocol PaginationDelegate: class {
@@ -55,8 +56,13 @@ class OMDBClient {
     private let session: URLSession
     private let searchKeyWord = "Batman"
     private let apiKey = "eeefc96f"
-    private let basePath = "http://www.omdbapi.com"
-    lazy var path = "\(basePath)/?s=\(searchKeyWord)&page=\(currentPage)&apikey=\(apiKey)"
+    var basePath = "http://www.omdbapi.com"
+    var path:String {
+        get {
+            return "\(basePath)/?s=\(searchKeyWord)&page=\(currentPage)&apikey=\(apiKey)"
+        }
+        
+    }
     private var isFetchingNextPage = false
     var currentPage = 1
     var content: [Result]?
@@ -66,6 +72,7 @@ class OMDBClient {
     init(session:URLSession,delegate:PaginationDelegate?) {
         self.session = session
         self.delegate = delegate
+        
     }
     
     
@@ -73,7 +80,7 @@ class OMDBClient {
     typealias ApiCompletionBlock<T: Decodable> = (ApiResult<T>) -> Void
     func fetchSearchResults(completion: @escaping ApiCompletionBlock<[Result]>) {
         
-        
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         
         guard let url = URL(string: path) else {
             completion(ApiResult.failure(ApiError.invalidURL(string: "Invalid URL")))
@@ -81,6 +88,9 @@ class OMDBClient {
         }
         isFetchingNextPage = true
         self.session.dataTask(with: url) { data, response, error in
+            DispatchQueue.main.async {
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            }
             if let e = error {
                 DispatchQueue.main.async {
                     completion(ApiResult.failure(.connectionError(message: e.localizedDescription)))
@@ -96,24 +106,14 @@ class OMDBClient {
                             if omdbModel.response == "True"  {
                                 if omdbModel.results.count > 0 {
                                     
-                                    //completion(ApiResult.success(omdbModel.results))
-//                                    if let content = self.content {
-//
-//                                    }
-//                                    else {
                                     guard let content = self.content else {
-                                            self.total = Int(omdbModel.totalResults) ?? 0
-                                           self.content = omdbModel.results
-                                          completion(ApiResult.success(omdbModel.results))
+                                        self.total = Int(omdbModel.totalResults) ?? 0
+                                        self.content = omdbModel.results
+                                        completion(ApiResult.success(omdbModel.results))
                                         return
                                         
                                     }
-                                    
-                                    
-                                    
-                                        completion(ApiResult.success(omdbModel.results))
-                                   // }
-                                   
+                                    completion(ApiResult.success(omdbModel.results))
                                 }
                                 else {
                                     completion(ApiResult.failure(ApiError.invalidApiResponse(message: "No results found")))
@@ -137,10 +137,10 @@ class OMDBClient {
                 
             }
             self.isFetchingNextPage = false
-        }.resume()
+            }.resume()
     }
     
-     func fetchNextPage() {
+    func fetchNextPage() {
         guard !isFetchingNextPage else { return }
         guard let content = content else { return }
         currentPage += 1
